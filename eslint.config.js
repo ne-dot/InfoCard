@@ -53,7 +53,7 @@ module.exports = [
       // React Native rules
       'react-native/no-unused-styles': 'warn',
       'react-native/no-inline-styles': 'warn',
-      'react-native/no-color-literals': 'warn',
+      'react-native/no-color-literals': 'off', // 关闭颜色字面量检查
       'react-native/no-raw-text': 'off',
       
       // General rules

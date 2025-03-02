@@ -1,74 +1,77 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { StyleSheet, View, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Link } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { NavigationBar } from '@/components/NavigationBar';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+  
+  // 估算导航栏高度（包含状态栏）
+  const navBarHeight = 56 + insets.top;
+  // 估算标签栏高度（包含底部安全区域）
+  const tabBarHeight = 46 + insets.bottom;
+  // 计算内容区域高度
+  const contentHeight = height - navBarHeight - tabBarHeight;
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
+    <View style={styles.container}>
+      <NavigationBar 
+        title="Info Card" 
+      />
+      <ThemedView style={{ height: contentHeight }}>
+        {/* 这里可以添加内容列表 */}
+        <View style={styles.container}/>
+        {/* 底部搜索框 */}
+        <View style={styles.bottomSearchContainer}>
+          <Link href="/search-page" asChild style={[styles.searchButton]}>
+            <TouchableOpacity>
+              <IconSymbol 
+                name="camera" 
+                size={24} 
+                color={useThemeColor({}, 'text')}
+              />
+              <ThemedText style={[styles.searchButtonText, { color: useThemeColor({}, 'text') }]}>Ask anything</ThemedText>
+              <IconSymbol 
+                name="mic.fill" 
+                size={24} 
+                color={useThemeColor({}, 'text')}
+              />
+            </TouchableOpacity>
+          </Link>
+        </View>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+  },
+  bottomSearchContainer: {
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    height: 64
+  },
+  searchButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    borderRadius: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    width: '90%',
+    justifyContent: 'space-between',
+    backgroundColor: '#fff'
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  searchButtonText: {
+    fontSize: 16,
+    flex: 1,
+    marginLeft: 10,
   },
 });
